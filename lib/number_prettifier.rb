@@ -39,26 +39,27 @@ class NumberPrettifier
 
     def verify_magnitude(number, position)
       trunc_i = number.dup.insert(position, '.').to_i
-      trunc_f = number.insert(position, '.').to_f  #(number.insert(position, '.').to_f * 10).truncate / 10
+      #trunc_f = remove_trailing_digits(number.insert(position, '.')).to_f 
+      trunc_f = (number.insert(position, '.').to_f * 10).truncate / 10.0
 
       trunc_i == trunc_f ? trunc_i : trunc_f
     end
 
-    #def remove_trailing_digits(number)
-    #  result = ''
-    #  previous = ''
+    def remove_trailing_digits(number)
+      result = ''
+      previous = ''
 
-    #  number.chars.each do |c|
-    #    if previous == '.'
-    #      result << c
-    #      break
-    #    end
+      number.chars.each do |c|
+        if previous == '.'
+          result << c
+          break
+        end
 
-    #    result << previous = c
-    #  end
+        result << previous = c
+      end
 
-    #  result
-    #end
+      result
+    end
 
   end
 

@@ -56,7 +56,7 @@ describe NumberPrettifier do
 
     context "given a next magnitude of non-zeros" do
       it "returns a float short scale" do
-        expect(NumberPrettifier.send(:verify_magnitude, '43700000000000')).to eql(43.7)
+        expect(NumberPrettifier.send(:verify_magnitude, '43700000000000', -13)).to eql(43.7)
       end
     end
   end
