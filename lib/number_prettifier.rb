@@ -1,3 +1,5 @@
+require 'byebug'
+
 class NumberPrettifier
 
   # Number of digits each magnitude has
@@ -8,8 +10,12 @@ class NumberPrettifier
   class << self
 
     def prettify(number = nil)
-      parameter = number.nil? ? false : true
-      number = number.to_s unless number.nil?
+      if number.nil?
+        parameter = false
+      else
+        parameter = true
+        number = number.to_s
+      end
 
       begin
         unless parameter
@@ -35,7 +41,7 @@ class NumberPrettifier
       when number.match(/[^\d.]+/)
         puts "Hey! We have a non-digit character here! Did you not read my request, zippy?"
         return false
-      when number.size > 15
+      when number.gsub(/\.+?\d./, '').size > 15
         puts "You must provide a number which is less than or equal to 999.999.999.999.999 (but without the dots, young!)"
         return false
       end
@@ -45,14 +51,15 @@ class NumberPrettifier
 
     # Truncate the number according with the short scale
     def truncate_number(number)
-      return number if number.gsub(/\.+?\d./, '').size < 7
+      int_part = number.gsub(/\.+?\d./, '')
+      return number if int_part.size < 7
 
-      if MILLION_DIGITS.include? number.size
-        "#{ verify_magnitude(number, -7) }M"
-      elsif BILLION_DIGITS.include? number.size
-        "#{ verify_magnitude(number, -10) }B"
+      if MILLION_DIGITS.include? int_part.size
+        "#{ verify_magnitude(int_part, -7) }M"
+      elsif BILLION_DIGITS.include? int_part.size
+        "#{ verify_magnitude(int_part, -10) }B"
       else
-        "#{ verify_magnitude(number, -13) }T"
+        "#{ verify_magnitude(int_part, -13) }T"
       end
     end
 

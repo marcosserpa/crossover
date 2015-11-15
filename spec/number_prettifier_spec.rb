@@ -66,4 +66,20 @@ describe NumberPrettifier do
     end
   end
 
+  describe ".prettify" do
+    context "given a valid number" do
+      it "returns the prettified form when is M" do
+        expect(NumberPrettifier.prettify(1000000)).to eql('1M')
+      end
+      it "returns the prettified form when is M" do
+        expect(NumberPrettifier.prettify(2500000.34)).to eql('2.5M')
+      end
+      it "returns the same number when is less then 1M" do
+        expect(NumberPrettifier.prettify(532)).to eql('532')
+      end
+      it "returns the prettified form when is B" do
+        expect(NumberPrettifier.prettify(1123456789)).to eql('1.1B')
+      end
+    end
+  end
 end
