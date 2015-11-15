@@ -3,9 +3,15 @@ require 'number_prettifier'
 describe NumberPrettifier do
 
   describe '.verify_input' do
-    context 'not given a number' do
+    context "given a whitespace" do
       it "returns a message" do
-        expect{ NumberPrettifier.send(:verify_input, '') }.to raise_error(RuntimeError, "You must provide a number, young padawan!")
+        expect{ NumberPrettifier.send(:verify_input, '') }.to output("You must provide a number, young padawan!\n").to_stdout
+      end
+    end
+
+    context "given a non-digit character" do
+      it "returns a message" do
+        expect{ NumberPrettifier.send(:verify_input, '19*') }.to output("Hey! We have a non-digit character here! Did you not read my request, zippy?\n").to_stdout
       end
     end
 
@@ -15,7 +21,7 @@ describe NumberPrettifier do
       end
       
       it "is greater than 999.999.999.999.999" do
-        expect{ NumberPrettifier.send(:verify_input, '1000000000000000') }.to raise_error(RuntimeError, "You must provide a number which is less than or equal to 999.999.999.999.999 (but without the dots, young!)")
+        expect{ NumberPrettifier.send(:verify_input, '1000000000000000') }.to output("You must provide a number which is less than or equal to 999.999.999.999.999 (but without the dots, young!)\n").to_stdout
       end
     end
 

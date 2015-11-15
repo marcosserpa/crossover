@@ -1,14 +1,24 @@
 class NumberPrettifier
 
+  # Number of digits each magnitude has
+  MILLION_DIGITS = [7, 8, 9]
+  BILLION_DIGITS = [10, 11, 12]
+  TRILLION_DIGITS = [13, 14, 15]
+
   class << self
 
     def prettify(number = nil)
-      unless not number.nil?
-        begin
+      parameter = number.nil? ? false : true
+      number = number.to_s unless number.nil?
+
+      begin
+        unless parameter
           puts "Hi pseudo-jedi! This is the number prettifier. Enter a number with more than 6 digits and wich is less than or equal to 999999999999999 (999 trillion):"
           number = gets.chomp
-        end until verify_input(number)
-      end
+        end
+
+        parameter = false
+      end until verify_input(number)
 
       truncate_number(number.to_s)
     end
@@ -18,26 +28,36 @@ class NumberPrettifier
 
     # Test if the input is a valid number
     def verify_input(number)
-      raise "You must provide a number, young padawan!" if number.empty?
-      raise "You must provide a number which is less than or equal to 999.999.999.999.999 (but without the dots, young!)" if number.to_i > 999999999999999
+      case
+      when number.empty?
+        puts "You must provide a number, young padawan!"
+        return false
+      when number.match(/[^\d.]+/)
+        puts "Hey! We have a non-digit character here! Did you not read my request, zippy?"
+        return false
+      when number.size > 15
+        puts "You must provide a number which is less than or equal to 999.999.999.999.999 (but without the dots, young!)"
+        return false
+      end
 
       true
     end
 
     # Truncate the number according with the short scale
     def truncate_number(number)
-      return number if number.size < 7
+      return number if number.gsub(/\.+?\d./, '').size < 7
 
-      if [7, 8, 9].include? number.size
+      if MILLION_DIGITS.include? number.size
         "#{ verify_magnitude(number, -7) }M"
-      elsif [10, 11, 12].include? number.size
+      elsif BILLION_DIGITS.include? number.size
         "#{ verify_magnitude(number, -10) }B"
       else
         "#{ verify_magnitude(number, -13) }T"
       end
     end
 
-    # Remove all decimal digits after it's first
+    # Remove all decimal digits after it's first; position (it's absolute value) is the first digit that defines this magnitude, when coming
+    # from a less magnitude
     def verify_magnitude(number, position)
       trunc_i = number.dup.insert(position, '.').to_i
       trunc_f = (number.insert(position, '.').to_f * 10).truncate / 10.0
