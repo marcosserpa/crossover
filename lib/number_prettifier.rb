@@ -1,5 +1,3 @@
-require 'byebug'
-
 class NumberPrettifier
 
   class << self
@@ -18,6 +16,7 @@ class NumberPrettifier
 
     private
 
+    # Test if the input is a valid number
     def verify_input(number)
       raise "You must provide a number, young padawan!" if number.empty?
       raise "You must provide a number which is less than or equal to 999.999.999.999.999 (but without the dots, young!)" if number.to_i > 999999999999999
@@ -25,6 +24,7 @@ class NumberPrettifier
       true
     end
 
+    # Truncate the number according with the short scale
     def truncate_number(number)
       return number if number.size < 7
 
@@ -37,28 +37,12 @@ class NumberPrettifier
       end
     end
 
+    # Remove all decimal digits after it's first
     def verify_magnitude(number, position)
       trunc_i = number.dup.insert(position, '.').to_i
-      #trunc_f = remove_trailing_digits(number.insert(position, '.')).to_f 
       trunc_f = (number.insert(position, '.').to_f * 10).truncate / 10.0
 
       trunc_i == trunc_f ? trunc_i : trunc_f
-    end
-
-    def remove_trailing_digits(number)
-      result = ''
-      previous = ''
-
-      number.chars.each do |c|
-        if previous == '.'
-          result << c
-          break
-        end
-
-        result << previous = c
-      end
-
-      result
     end
 
   end
